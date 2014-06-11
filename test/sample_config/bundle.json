@@ -1,4 +1,4 @@
- [{
+{
   "name": "nexthop",
   "version": "1.0",
   "author": "ChinFu.Yang",
@@ -10,14 +10,17 @@
   "priority": 90,
   "retry": 3,
   "retryInterval": 500,
-  "hook": ["ethernet", "wireless"],
+  "hook": [
+    "ethernet",
+    "wireless"
+  ],
   "dependencies": {
     "ethernet": "~1.0",
     "web": "~1.0"
   },
   "repository": {
-      "type": "git",
-      "url": "your git url"
+    "type": "git",
+    "url": "your git url"
   },
   "resources": [
     {
@@ -25,7 +28,18 @@
       "uri": "/network/cellular"
     },
     {
-      "uri": "/network/cellular/:id"
+      "methods": [
+        "put",
+        "get"
+      ],
+      "uri": "/network/cellular/:id",
+      "file": {
+        "files": [
+          "firmware.zip",
+          "key.pub"
+        ],
+        "dest": "./uploads/"
+      }
     }
   ]
-}]
+}
