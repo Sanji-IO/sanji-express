@@ -1,0 +1,31 @@
+ [{
+  "name": "nexthop",
+  "version": "1.0",
+  "author": "ChinFu.Yang",
+  "email": "ChinFu.Yang@moxa.com",
+  "description": "This is a nexthop model.",
+  "license": "MOXA",
+  "main": "nexthop.py",
+  "argument": "",
+  "priority": 90,
+  "retry": 3,
+  "retryInterval": 500,
+  "hook": ["ethernet", "wireless"],
+  "dependencies": {
+    "ethernet": "~1.0",
+    "web": "~1.0"
+  },
+  "repository": {
+      "type": "git",
+      "url": "your git url"
+  },
+  "resources": [
+    {
+      "methods": "get",
+      "uri": "/network/cellular"
+    },
+    {
+      "uri": "/network/cellular/:id"
+    }
+  ]
+}]

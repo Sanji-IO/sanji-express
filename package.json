@@ -1,0 +1,21 @@
+{
+  "name": "express-sanji",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "mxmqtt": "git+ssh://git@bitbucket.org:moxa-tw/mxmqtt.git",
+    "lodash": "^2.4.1",
+    "bunyan": "0.22.3",
+    "chokidar": "^0.8.2",
+    "multer": "^0.1.0"
+  },
+  "devDependencies": {
+    "express": "^4.4.2"
+  }
+}
