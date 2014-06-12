@@ -25,7 +25,7 @@ function cros(req, res, next) {
 }
 
 var rest = sanji(app, {
-    modelPath: '/home/zack/samba/sanji-web/test/sample_config'
+    modelPath: './sample_config'
   });
 app.use(cros);
 app.use('/v1/api', rest);
