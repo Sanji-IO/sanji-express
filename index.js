@@ -1,1 +1,1 @@
-exports = require('./lib/sanji');
+module.exports = require('./lib/sanji');
