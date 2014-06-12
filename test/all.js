@@ -24,7 +24,9 @@ function cros(req, res, next) {
   return next();
 }
 
-var rest = sanji(app, {modelPath: '/home/zack/samba/sanji-web/test/sample_config'});
+var rest = sanji(app, {
+    modelPath: '/home/zack/samba/sanji-web/test/sample_config'
+  });
 app.use(cros);
 app.use('/v1/api', rest);
 app.listen(7890);

@@ -28,13 +28,21 @@
       "uri": "/network/cellular"
     },
     {
+      "methods": "get",
+      "uri": "/system/export/download",
+      "downloadFile": {
+        "path": "/home/zack/samba/mar2000/romfsdisk/home/machine.json",
+        "name": "machine.json"
+      }
+    },
+    {
       "methods": [
         "put",
         "get"
       ],
       "uri": "/network/cellular/:id",
-      "file": {
-        "files": [
+      "uploadFile": {
+        "allowedFiles": [
           "firmware.zip",
           "key.pub"
         ],

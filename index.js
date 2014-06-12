@@ -1,3 +1,1 @@
-exports = function() {
-	;
-}
+exports = require('./lib/sanji');
