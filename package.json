@@ -1,5 +1,5 @@
 {
-  "name": "express-sanji",
+  "name": "sanji-express",
   "version": "0.7.2",
   "description": "An express middleware for Sanji Framework.",
   "main": "index.js",
@@ -10,7 +10,7 @@
   "private": true,
   "license": "MOXA",
   "dependencies": {
-    "mxmqtt": "git+ssh://git@bitbucket.org:moxa-tw/mxmqtt.git",
+    "sanji-node": "git+ssh://git@github.com:Sanji-IO/sanji-node.git",
     "lodash": "^2.4.1",
     "bunyan": "0.22.3",
     "chokidar": "^0.8.2",
