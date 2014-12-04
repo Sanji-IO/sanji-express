@@ -24,15 +24,44 @@
   },
   "resources": [
     {
-      "methods": "get",
-      "uri": "/network/cellular"
+      "resource": "/system/time"
     },
     {
       "methods": "get",
-      "uri": "/system/export/download",
-      "downloadFile": {
-        "path": "/home/zack/samba/mar2000/romfsdisk/home/machine.json",
-        "name": "machine.json"
+      "resource": "/i/want/to/download/file1",
+      "file": {
+        "downloadFile": {
+          "path": "downloads",
+          "filename": "file1"
+        }
+      }
+    },
+    {
+      "methods": "get",
+      "resource": "/i/want/to/download/:filename",
+      "file": {
+        "downloadFile": {
+          "path": "downloads"
+        }
+      }
+    },
+    {
+      "methods": "delete",
+      "resource": "/i/want/to/delete/named/test",
+      "file": {
+        "deleteFile": {
+          "path": "deletes",
+          "filename": "test"
+        }
+      }
+    },
+    {
+      "methods": "delete",
+      "resource": "/i/want/to/delete/:filename",
+      "file": {
+        "deleteFile": {
+          "path": "deletes"
+        }
       }
     },
     {
@@ -40,13 +69,35 @@
         "put",
         "get"
       ],
-      "uri": "/network/cellular/:id",
-      "uploadFile": {
-        "allowedFiles": [
-          "firmware.zip",
-          "key.pub"
-        ],
-        "dest": "./uploads/"
+      "resource": "/network/cellular/:id",
+      "file": {
+        "uploadFile": {
+          "index": false,
+          "allowedFiles": [
+            "firmware.zip",
+            "key.pub"
+          ],
+          "path": "uploads"
+        }
+      }
+    },
+    {
+      "methods": "post",
+      "resource": "/network/cellular",
+      "file": {
+        "uploadFile": {
+          "path": "uploads"
+        }
+      }
+    },
+    {
+      "methods": "post",
+      "resource": "/remote/gateway/upload",
+      "file": {
+        "uploadFile": {
+          "createPublicLink": true,
+          "path": "uploads"
+        }
       }
     }
   ]

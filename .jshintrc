@@ -16,11 +16,19 @@
   "trailing": true,
   "smarttabs": true,
   "globals": {
+    /* MOCHA */
+    "describe": false,
+    "it": false,
+    "before": false,
+    "beforeEach": false,
+    "after": false,
+    "afterEach": false,
     "angular": false,
     "device": false,
     "google": false,
     "jQuery": false,
     "$": false,
-    "_": false
+    "_": true,
+    "Promise": true
   }
 }

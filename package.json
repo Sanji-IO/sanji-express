@@ -10,13 +10,20 @@
   "private": true,
   "license": "MOXA",
   "dependencies": {
-    "sanji-node": "git+ssh://git@github.com:Sanji-IO/sanji-node.git",
-    "lodash": "^2.4.1",
+    "body-parser": "^1.10.0",
     "bunyan": "0.22.3",
     "chokidar": "^0.8.2",
-    "multer": "^0.1.0"
+    "lodash": "^2.4.1",
+    "multer": "^0.1.0",
+    "socket.io": "^1.2.1"
   },
   "devDependencies": {
-    "express": "^4.4.2"
+    "bluebird": "^2.3.11",
+    "express": "^4.4.2",
+    "mocha": "^2.0.1",
+    "rimraf": "^2.2.8",
+    "should": "^4.3.0",
+    "sinon": "^1.12.1",
+    "supertest": "^0.15.0"
   }
 }
