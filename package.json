@@ -4,7 +4,7 @@
   "description": "An express middleware for Sanji Framework.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "make test"
   },
   "author": "Zack YL Shih",
   "private": true,
@@ -15,7 +15,7 @@
     "chokidar": "^0.8.2",
     "lodash": "^2.4.1",
     "multer": "^0.1.0",
-    "sanji": "git+https://git@github.com/Sanji-IO/sanji-node.git#develop",
+    "sanji": "^0.0.1",
     "socket.io": "^1.2.1"
   },
   "devDependencies": {
