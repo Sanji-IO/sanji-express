@@ -15,6 +15,7 @@
     "chokidar": "^0.8.2",
     "lodash": "^2.4.1",
     "multer": "^0.1.0",
+    "sanji": "git+https://git@github.com/Sanji-IO/sanji-node.git#develop",
     "socket.io": "^1.2.1"
   },
   "devDependencies": {
