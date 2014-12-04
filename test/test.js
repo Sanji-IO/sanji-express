@@ -25,7 +25,7 @@ function makeMockPromise(resource, data) {
 describe('SanjiExpress', function() {
 
   var app, se,
-      BUNDLES_HOME = '/home/zack/github/sanji-node-express/test';
+      BUNDLES_HOME = __dirname;
 
   beforeEach(function() {
     process.env.BUNDLES_HOME = BUNDLES_HOME;
