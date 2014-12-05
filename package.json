@@ -6,8 +6,7 @@
   "scripts": {
     "test": "make test"
   },
-  "author": "Zack YL Shih",
-  "private": true,
+  "author": "YuLun Shih",
   "license": "MOXA",
   "dependencies": {
     "body-parser": "^1.10.0",
