@@ -28,10 +28,13 @@ describe('SanjiExpress', function() {
       BUNDLES_HOME = __dirname;
 
   beforeEach(function() {
-    process.env.BUNDLES_HOME = BUNDLES_HOME;
     app = express();
     app.use(require('body-parser').json());
-    se = new SanjiExpress(app);
+    se = new SanjiExpress({
+      bundlesHome: BUNDLES_HOME
+    });
+    app.use(se);
+    se = se.sanji;
 
     ['get', 'post', 'put', 'delete'].forEach(function(method) {
       se.bundle.publish[method] = makeMockPromise;
