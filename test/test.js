@@ -1,5 +1,5 @@
 var bunyan = require('bunyan'),
-    log = bunyan.log = bunyan.createLogger({name: 'Sanji-REST', level: 'debug'}),
+    log = bunyan.log = bunyan.createLogger({name: 'Sanji-REST'}),
     path = require('path'),
     should = require('should'),
     sinon = require('sinon'),
@@ -72,6 +72,20 @@ describe('SanjiExpress', function() {
   describe('SanjiExpressFile', function() {
     describe('get file if config as downloadFile', function() {
 
+      var dirpath = BUNDLES_HOME + '/sample_config/downloads';
+
+      beforeEach(function(done) {
+        rimraf.sync(dirpath);
+        fs.mkdirSync(dirpath);
+        fs.writeFile(dirpath + '/file1', 'file1', function() {
+          fs.writeFile(dirpath + '/file2', done);
+        });
+      });
+
+      afterEach(function() {
+        rimraf.sync(dirpath);
+      });
+
       it('should get file with "assigned filename"', function(done) {
         request(app)
           .get('/i/want/to/download/file1')
@@ -105,16 +119,17 @@ describe('SanjiExpress', function() {
 
     describe('delete file if config as deleteFile', function() {
 
-      var filepath = BUNDLES_HOME + '/sample_config/deletes/test';
+      var filepath = BUNDLES_HOME + '/sample_config/deletes/test',
+          dirpath = BUNDLES_HOME + '/sample_config/deletes';
 
       beforeEach(function(done) {
+        rimraf.sync(dirpath);
+        fs.mkdirSync(dirpath);
         fs.writeFile(filepath, 'test', done);
       });
 
-      afterEach(function(done) {
-        fs.unlink(filepath, function() {
-          done();
-        });
+      afterEach(function() {
+        rimraf.sync(dirpath);
       });
 
       it('should delete file with "assigned filename"', function(done) {
@@ -144,7 +159,7 @@ describe('SanjiExpress', function() {
       });
 
       afterEach(function() {
-        // rimraf.sync(uploadDir);
+        rimraf.sync(uploadDir);
       });
 
       it('should upload file with "allowed filenames"', function(done) {
