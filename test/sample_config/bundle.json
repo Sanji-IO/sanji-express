@@ -30,7 +30,7 @@
       "methods": "get",
       "resource": "/i/want/to/download/file1",
       "file": {
-        "downloadFile": {
+        "download": {
           "path": "downloads",
           "filename": "file1"
         }
@@ -40,7 +40,7 @@
       "methods": "get",
       "resource": "/i/want/to/download/:filename",
       "file": {
-        "downloadFile": {
+        "download": {
           "path": "downloads"
         }
       }
@@ -49,7 +49,7 @@
       "methods": "delete",
       "resource": "/i/want/to/delete/named/test",
       "file": {
-        "deleteFile": {
+        "delete": {
           "path": "deletes",
           "filename": "test"
         }
@@ -59,7 +59,7 @@
       "methods": "delete",
       "resource": "/i/want/to/delete/:filename",
       "file": {
-        "deleteFile": {
+        "delete": {
           "path": "deletes"
         }
       }
@@ -71,7 +71,7 @@
       ],
       "resource": "/network/cellular/:id",
       "file": {
-        "uploadFile": {
+        "upload": {
           "index": false,
           "allowedFiles": [
             "firmware.zip",
@@ -85,7 +85,7 @@
       "methods": "post",
       "resource": "/network/cellular",
       "file": {
-        "uploadFile": {
+        "upload": {
           "path": "uploads"
         }
       }
@@ -94,7 +94,7 @@
       "methods": "post",
       "resource": "/remote/gateway/upload",
       "file": {
-        "uploadFile": {
+        "upload": {
           "createPublicLink": true,
           "path": "uploads"
         }
