@@ -1,5 +1,4 @@
-var bunyan = require('bunyan'),
-    log = bunyan.log = bunyan.createLogger({name: 'Sanji-REST'}),
+var log = require('sanji-logger')('sanji-rest'),
     path = require('path'),
     should = require('should'),
     sinon = require('sinon'),
@@ -9,6 +8,7 @@ var bunyan = require('bunyan'),
     Promise = require('bluebird'),
     rimraf = require('rimraf'),
     fs = require('fs');
+
 
 function makeMockPromise(resource, data) {
   return new Promise(function (resolve) {

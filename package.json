@@ -10,11 +10,11 @@
   "license": "MOXA",
   "dependencies": {
     "body-parser": "^1.10.0",
-    "bunyan": "0.22.3",
     "chokidar": "^0.8.2",
     "lodash": "^2.4.1",
     "multer": "^0.1.0",
-    "sanji": "^0.0.1",
+    "sanji": "^0.0.2",
+    "sanji-logger": "0.0.1",
     "socket.io": "^1.2.1"
   },
   "devDependencies": {
@@ -22,7 +22,7 @@
     "express": "^4.4.2",
     "mocha": "^2.0.1",
     "rimraf": "^2.2.8",
-    "should": "^4.3.0",
+    "should": "^4.3.1",
     "sinon": "^1.12.1",
     "supertest": "^0.15.0"
   }
