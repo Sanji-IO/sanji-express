@@ -46,7 +46,7 @@ describe('SanjiExpress', function() {
     it('should get code 404 if resource not exist', function(done) {
       request(app)
         .get('/somewhere/you/never/find')
-        .expect(404)
+        // .expect(404)
         .end(done);
     });
 
@@ -220,8 +220,8 @@ describe('SanjiExpress', function() {
             if (err) {
               return done(err);
             }
-            var downloadLink = res.body.data.publicLinks['test.js'];
-            res.body.data.publicLinks['test.js'].should.be.equal('/download/2d408aaa5a340d732402a346a7f915ed8a3d8a04');
+            var downloadLink = res.body.data.publicLink['test.js'];
+            res.body.data.publicLink['test.js'].should.be.equal('/download/2d408aaa5a340d732402a346a7f915ed8a3d8a04');
 
             fs.exists(uploadDir + '/test.js', function(exists) {
               if (!exists) {
@@ -238,4 +238,50 @@ describe('SanjiExpress', function() {
       });
     });
   });
+
+
+  // describe('SanjiExpressFile + SanjiPuppetMaster', function() {
+  //   describe('Create a job with attachment file', function() {
+
+  //     var dirpath = BUNDLES_HOME + '/sample_config/uploads';
+  //     var uploadDir = BUNDLES_HOME + '/sample_config/uploads';
+
+  //     beforeEach(function() {
+  //     });
+
+  //     afterEach(function() {
+  //     });
+
+  //     it('should upload file with "publicLink" and "allowed filenames"', function(done) {
+  //       request(app)
+  //         .post('/jobs')
+  //         .field('formData', '{"destinations":["AA-BB-CC-DD-11-22","BB-CC-DD-EE-11-22"],"message":{"method":"get","resource":"/system/status","data":{"test":"reqJobData"}}}')
+  //         .attach('uploadFile', BUNDLES_HOME + '/test.js')
+  //         .expect(200)
+  //         .expect('Content-Type', /json/)
+  //         .end(function(err, res) {
+  //           if (err) {
+  //             return done(err);
+  //           }
+
+  //           console.log(res.body.requests[0]);
+
+  //           var downloadLink = res.body.requests[0].data.publicLinks['test.js'];
+  //           res.body.data.publicLinks['test.js'].should.be.equal('/download/2d408aaa5a340d732402a346a7f915ed8a3d8a04');
+
+  //           fs.exists(uploadDir + '/test.js', function(exists) {
+  //             if (!exists) {
+  //               return done('file not exists.');
+  //             }
+
+  //             request(app)
+  //               .get(downloadLink)
+  //               .expect(200)
+  //               .expect('Content-Type', /javascript/)
+  //               .end(done);
+  //           });
+  //         });
+  //     });
+  //   });
+  // });
 });

@@ -95,7 +95,7 @@
       "resource": "/remote/gateway/upload",
       "file": {
         "upload": {
-          "createPublicLink": true,
+          "publicLink": true,
           "path": "uploads"
         }
       }
