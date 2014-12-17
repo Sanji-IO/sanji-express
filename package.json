@@ -9,14 +9,15 @@
   "author": "YuLun Shih",
   "license": "MOXA",
   "dependencies": {
+    "bluebird": "^2.3.11",
     "body-parser": "^1.10.0",
     "chokidar": "^0.8.2",
     "lodash": "^2.4.1",
     "multer": "^0.1.0",
     "sanji": "^0.0.2",
     "sanji-logger": "0.0.1",
-    "socket.io": "^1.2.1",
-    "bluebird": "^2.3.11"
+    "sanji-puppetmaster": "0.0.1",
+    "socket.io": "^1.2.1"
   },
   "devDependencies": {
     "express": "^4.4.2",
