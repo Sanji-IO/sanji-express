@@ -1,43 +1,64 @@
-var log = require('sanji-logger')('sanji-rest'),
-    path = require('path'),
-    should = require('should'),
-    sinon = require('sinon'),
+var should = require('should'),
     request = require('supertest'),
     express = require('express'),
     SanjiExpress = require('../index'),
     Promise = require('bluebird'),
     rimraf = require('rimraf'),
+    ioc = require('socket.io-client'),
     fs = require('fs');
 
 
-function makeMockPromise(resource, data) {
+function makeMockPromise(resource, data, dest) {
   return new Promise(function (resolve) {
     return resolve({
       code: 200,
       data: {
         resource: resource,
-        data: data
+        data: data,
+        destination: dest
       }
     });
   });
 }
 
+function client(srv, nsp, opts){
+  if ('object' === typeof nsp) {
+    opts = nsp;
+    nsp = null;
+  }
+  var addr = srv.address();
+  if (!addr) {
+    addr = srv.listen().address();
+  }
+  var url = 'ws://' + addr.address + ':' + addr.port + (nsp || '');
+  return ioc(url, opts);
+}
+
 describe('SanjiExpress', function() {
 
-  var app, se,
+  var app, se, io, server,
       BUNDLES_HOME = __dirname;
 
   beforeEach(function() {
     app = express();
     app.use(require('body-parser').json());
+
+    // setup socket.io
+    server = require('http').Server(app);
+    io = require('socket.io')(server);
+
+    // setup SanjiExpress
     se = new SanjiExpress({
-      bundlesHome: BUNDLES_HOME
+      bundlesHome: BUNDLES_HOME,
+      io: io
     });
     app.use(se);
     se = se.sanji;
 
     ['get', 'post', 'put', 'delete'].forEach(function(method) {
       se.bundle.publish[method] = makeMockPromise;
+      se.bundle.publish.direct[method] = makeMockPromise;
+      se.bundle.publish.event[method] = makeMockPromise;
     });
   });
 
@@ -200,7 +221,7 @@ describe('SanjiExpress', function() {
             }
 
             res.body.data.test.should.be.equal('ok!');
-            res.body.data._file.files.should.eql(['test.js']);
+            res.body.data._file.index.should.eql(['test.js']);
             fs.exists(uploadDir + '/test.js', function(exists) {
               if (exists) {
                 return done();
@@ -220,8 +241,9 @@ describe('SanjiExpress', function() {
             if (err) {
               return done(err);
             }
-            var downloadLink = res.body.data.publicLink['test.js'];
-            res.body.data.publicLink['test.js'].should.be.equal('/download/2d408aaa5a340d732402a346a7f915ed8a3d8a04');
+
+            var downloadLink = res.body.data._file.publicLink['test.js'];
+            res.body.data._file.publicLink['test.js'].should.be.equal('/download/2d408aaa5a340d732402a346a7f915ed8a3d8a04');
 
             fs.exists(uploadDir + '/test.js', function(exists) {
               if (!exists) {
@@ -239,49 +261,87 @@ describe('SanjiExpress', function() {
     });
   });
 
+  describe('SanjiExpressFile + SanjiPuppetMaster', function() {
 
-  // describe('SanjiExpressFile + SanjiPuppetMaster', function() {
-  //   describe('Create a job with attachment file', function() {
+    describe('Create a job with attachment file', function() {
 
-  //     var dirpath = BUNDLES_HOME + '/sample_config/uploads';
-  //     var uploadDir = BUNDLES_HOME + '/sample_config/uploads';
+      var uploadDir = '/tmp';
 
-  //     beforeEach(function() {
-  //     });
+      beforeEach(function() {
+      });
 
-  //     afterEach(function() {
-  //     });
+      afterEach(function() {
+      });
 
-  //     it('should upload file with "publicLink" and "allowed filenames"', function(done) {
-  //       request(app)
-  //         .post('/jobs')
-  //         .field('formData', '{"destinations":["AA-BB-CC-DD-11-22","BB-CC-DD-EE-11-22"],"message":{"method":"get","resource":"/system/status","data":{"test":"reqJobData"}}}')
-  //         .attach('uploadFile', BUNDLES_HOME + '/test.js')
-  //         .expect(200)
-  //         .expect('Content-Type', /json/)
-  //         .end(function(err, res) {
-  //           if (err) {
-  //             return done(err);
-  //           }
+      it('should upload file with "publicLink" and "allowed filenames"', function(done) {
+        request(app)
+          .post('/jobs')
+          .field('formData', '{"destinations":["AA-BB-CC-DD-11-22","BB-CC-DD-EE-11-22"],"message":{"method":"post","resource":"/system/status","data":{"test":"reqJobData"}}}')
+          .attach('test.js', BUNDLES_HOME + '/test.js')
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
 
-  //           console.log(res.body.requests[0]);
+            var downloadLink = res.body.requests[0].data
+              ._file.publicLink['test.js'];
 
-  //           var downloadLink = res.body.requests[0].data.publicLinks['test.js'];
-  //           res.body.data.publicLinks['test.js'].should.be.equal('/download/2d408aaa5a340d732402a346a7f915ed8a3d8a04');
+            res.body.requests[0].data
+              ._file.publicLink['test.js']
+              .should.be
+              .equal('/download/2d408aaa5a340d732402a346a7f915ed8a3d8a04');
 
-  //           fs.exists(uploadDir + '/test.js', function(exists) {
-  //             if (!exists) {
-  //               return done('file not exists.');
-  //             }
+            fs.exists(uploadDir + '/test.js', function(exists) {
+              if (!exists) {
+                return done('file not exists.');
+              }
 
-  //             request(app)
-  //               .get(downloadLink)
-  //               .expect(200)
-  //               .expect('Content-Type', /javascript/)
-  //               .end(done);
-  //           });
-  //         });
-  //     });
-  //   });
-  // });
+              request(app)
+                .get(downloadLink)
+                .expect(200)
+                .expect('Content-Type', /javascript/)
+                .end(done);
+            });
+          });
+      });
+    });
+
+    describe('Create a request with attachment file', function() {
+
+      var uploadDir = '/tmp';
+
+      it('should upload file with "publicLink" and "allowed filenames"', function(done) {
+        request(app)
+          .post('/requests')
+          .field('formData', '{"destination": "AA-BB-CC-DD-11-22","message":{"method":"post","resource":"/system/status","data":{"test":"reqRequestData"}}}')
+          .attach('test.js', BUNDLES_HOME + '/test.js')
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
+
+            var downloadLink = res.body.data._file.publicLink['test.js'];
+
+            res.body.data._file.publicLink['test.js'].should.be
+              .equal('/download/2d408aaa5a340d732402a346a7f915ed8a3d8a04');
+
+            fs.exists(uploadDir + '/test.js', function(exists) {
+              if (!exists) {
+                return done('file not exists.');
+              }
+
+              request(app)
+                .get(downloadLink)
+                .expect(200)
+                .expect('Content-Type', /javascript/)
+                .end(done);
+            });
+          });
+      });
+    });
+  });
 });
