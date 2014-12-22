@@ -263,15 +263,9 @@ describe('SanjiExpress', function() {
 
   describe('SanjiExpressFile + SanjiPuppetMaster', function() {
 
-    describe('Create a job with attachment file', function() {
+    describe('create a job with attachment file', function() {
 
       var uploadDir = '/tmp';
-
-      beforeEach(function() {
-      });
-
-      afterEach(function() {
-      });
 
       it('should upload file with "publicLink" and "allowed filenames"', function(done) {
         request(app)
@@ -308,7 +302,7 @@ describe('SanjiExpress', function() {
       });
     });
 
-    describe('Create a request with attachment file', function() {
+    describe('create a request with attachment file', function() {
 
       var uploadDir = '/tmp';
 
@@ -341,6 +335,28 @@ describe('SanjiExpress', function() {
                 .end(done);
             });
           });
+      });
+    });
+
+    describe('create a job without attachment file', function() {
+      it('should create a job"', function(done) {
+        request(app)
+          .post('/jobs')
+          .send({'destinations':['AA-BB-CC-DD-11-22','BB-CC-DD-EE-11-22'],'message':{'method':'post','resource':'/system/status','data':{'test':'reqJobData'}}})
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(done);
+      });
+    });
+
+    describe('create a request without attachment file', function() {
+      it('should create a request"', function(done) {
+        request(app)
+          .post('/requests')
+          .send({'destination': 'AA-BB-CC-DD-11-22','message':{'method':'post','resource':'/system/status','data':{'test':'reqRequestData'}}})
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(done);
       });
     });
   });
