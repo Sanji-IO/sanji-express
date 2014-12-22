@@ -300,6 +300,40 @@ describe('SanjiExpress', function() {
             });
           });
       });
+
+      it('should upload file with "publicLink", "allowed filenames" without "message.data"', function(done) {
+        request(app)
+          .post('/jobs')
+          .field('formData', '{"destinations":["AA-BB-CC-DD-11-22","BB-CC-DD-EE-11-22"],"message":{"method":"post","resource":"/system/status"}}')
+          .attach('test.js', BUNDLES_HOME + '/test.js')
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
+
+            var downloadLink = res.body.requests[0].data
+              ._file.publicLink['test.js'];
+
+            res.body.requests[0].data
+              ._file.publicLink['test.js']
+              .should.be
+              .equal('/download/2d408aaa5a340d732402a346a7f915ed8a3d8a04');
+
+            fs.exists(uploadDir + '/test.js', function(exists) {
+              if (!exists) {
+                return done('file not exists.');
+              }
+
+              request(app)
+                .get(downloadLink)
+                .expect(200)
+                .expect('Content-Type', /javascript/)
+                .end(done);
+            });
+          });
+      });
     });
 
     describe('create a request with attachment file', function() {
@@ -310,6 +344,37 @@ describe('SanjiExpress', function() {
         request(app)
           .post('/requests')
           .field('formData', '{"destination": "AA-BB-CC-DD-11-22","message":{"method":"post","resource":"/system/status","data":{"test":"reqRequestData"}}}')
+          .attach('test.js', BUNDLES_HOME + '/test.js')
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
+
+            var downloadLink = res.body.data._file.publicLink['test.js'];
+
+            res.body.data._file.publicLink['test.js'].should.be
+              .equal('/download/2d408aaa5a340d732402a346a7f915ed8a3d8a04');
+
+            fs.exists(uploadDir + '/test.js', function(exists) {
+              if (!exists) {
+                return done('file not exists.');
+              }
+
+              request(app)
+                .get(downloadLink)
+                .expect(200)
+                .expect('Content-Type', /javascript/)
+                .end(done);
+            });
+          });
+      });
+
+      it('should upload file with "publicLink", "allowed filenames" and without "message.data"', function(done) {
+        request(app)
+          .post('/requests')
+          .field('formData', '{"destination": "AA-BB-CC-DD-11-22","message":{"method":"post","resource":"/system/status"}}')
           .attach('test.js', BUNDLES_HOME + '/test.js')
           .expect(200)
           .expect('Content-Type', /json/)
@@ -354,6 +419,28 @@ describe('SanjiExpress', function() {
         request(app)
           .post('/requests')
           .send({'destination': 'AA-BB-CC-DD-11-22','message':{'method':'post','resource':'/system/status','data':{'test':'reqRequestData'}}})
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(done);
+      });
+    });
+
+    describe('create a job without attachment file and message.data', function() {
+      it('should create a job"', function(done) {
+        request(app)
+          .post('/jobs')
+          .send({'destinations':['AA-BB-CC-DD-11-22','BB-CC-DD-EE-11-22'],'message':{'method':'post','resource':'/system/status'}})
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(done);
+      });
+    });
+
+    describe('create a request without attachment file and message.data', function() {
+      it('should create a request"', function(done) {
+        request(app)
+          .post('/requests')
+          .send({'destination': 'AA-BB-CC-DD-11-22','message':{'method':'post','resource':'/system/status'}})
           .expect(200)
           .expect('Content-Type', /json/)
           .end(done);
