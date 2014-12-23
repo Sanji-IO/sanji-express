@@ -15,8 +15,8 @@
     "lodash": "^2.4.1",
     "multer": "^0.1.0",
     "sanji": "^0.0.2",
-    "sanji-logger": "0.0.1",
-    "sanji-puppetmaster": "0.0.1",
+    "sanji-logger": "^0.0.1",
+    "sanji-puppetmaster": "^0.0.2",
     "socket.io": "^1.2.1"
   },
   "devDependencies": {
