@@ -3,10 +3,12 @@ var bunyan = require('bunyan'),
     app = require('express')(),
     SanjiExpress = require('../../index');
 
-new SanjiExpress(app, {
-  brokerHost: 'localhost',
+new SanjiExpress({
+  brokerHost: '192.168.31.14',
   borkerPort: 1883,
-  bundlesHome: '/home/zack/github/sanji-node-express/test'
+  loaderOptions: {
+    bundlesHome: '/home/zack/github/sanji-node-express/test'
+  }
 });
 
-app.listen(5566);
+// app.listen(5566);
