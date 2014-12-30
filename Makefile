@@ -12,10 +12,10 @@ coverage:
 
 travis-test:
 	NODE_ENV=production YOURPACKAGE_COVERAGE=1 ./node_modules/.bin/mocha \
-	  --require blanket \
-	  --reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js
+		--require blanket \
+		--reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js
 
 version-patch:
-  npm version patch && git push && git push --tags && npm publish
+	npm version patch && git push && git push --tags && npm publish
 
-.PHONY: test watch-coverage watch coverage travis-test
+.PHONY: test watch-coverage watch coverage travis-test version-patch
