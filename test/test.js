@@ -93,6 +93,35 @@ describe('SanjiExpress', function() {
     });
   });
 
+  describe('CRUD translate to "remote" MQTT', function() {
+    var cgId = 'cg-1234';
+
+    it('should translate [GET] method message to /remote/' + cgId, function(done) {
+      request(app)
+        .get('/' + cgId + '/system/time')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(done);
+    });
+
+    it('should translate [PUT] method message with data to /remote/' + cgId, function(done) {
+      request(app)
+        .put('/' + cgId + '/system/time')
+        .send({test: 'okok'})
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          res.body.resource.should.be.equal('/remote/' + cgId);
+          res.body.data.should.be.eql({
+            data: {test: 'okok'},
+            resource: '/system/time',
+            method: 'put'
+          });
+          done(err);
+        });
+    });
+  });
+
   describe('SanjiExpressFile', function() {
     describe('get file if config as downloadFile', function() {
 
