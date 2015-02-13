@@ -16,7 +16,7 @@
     "multer": "^0.1.0",
     "sanji": "^0.0.2",
     "sanji-logger": "^0.0.1",
-    "sanji-puppetmaster": "^0.0.7",
+    "sanji-puppetmaster": "^0.0.8",
     "socket.io": "^1.2.1"
   },
   "devDependencies": {
