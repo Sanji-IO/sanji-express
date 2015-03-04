@@ -5,10 +5,15 @@ var should = require('should'),
     Promise = require('bluebird'),
     rimraf = require('rimraf'),
     ioc = require('socket.io-client'),
+    sinon = require('sinon')
     fs = require('fs');
 
 
-function makeMockPromise(resource, data, dest) {
+function makeMockPromise(resource, data, dest, delayTime) {
+  if (delayTime === undefined || delayTime <= 0) {
+    delayTime = 0;
+  }
+
   return new Promise(function (resolve) {
     return resolve({
       code: 200,
@@ -18,7 +23,14 @@ function makeMockPromise(resource, data, dest) {
         destination: dest
       }
     });
-  });
+  })
+  .delay(delayTime);
+}
+
+function makeMockPromiseWithDelay(delayTime) {
+  return function(resource, data, dest) {
+    return makeMockPromise(resource, data, dest, delayTime);
+  };
 }
 
 function client(srv, nsp, opts){
@@ -77,6 +89,18 @@ describe('SanjiExpress', function() {
         .expect(200)
         .expect('Content-Type', /json/)
         .end(done);
+    });
+
+    it('should get code 408 if controller no response (timeout)', function(done) {
+      var clock = sinon.useFakeTimers();
+      se.bundle.publish.delete = makeMockPromiseWithDelay(9999999);
+      request(app)
+        .delete('/system/time')
+        .expect(408)
+        .expect('Content-Type', /json/)
+        .end(done);
+      clock.tick(1500);
+      clock.restore();
     });
 
     it('should translate [PUT] method message with data', function(done) {
