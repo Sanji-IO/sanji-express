@@ -128,6 +128,20 @@ describe('SanjiExpress', function() {
         .end(done);
     });
 
+    it('should translate [GET] method message to /remote/ with query string' + cgId, function(done) {
+      request(app)
+        .get('/' + cgId + '/system/time?page=10')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          if (err) {
+            throw err;
+          }
+          res.body.data.resource.should.be.eql('/system/time?page=10');
+          done();
+        });
+    });
+
     it('should translate [PUT] method message with data to /remote/' + cgId, function(done) {
       request(app)
         .put('/' + cgId + '/system/time')
