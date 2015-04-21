@@ -321,7 +321,11 @@ describe('SanjiExpress', function() {
                 .get(downloadLink)
                 .expect(200)
                 .expect('Content-Type', /javascript/)
-                .end(done);
+                .end(function(err2, res2) {
+                  res2.headers['content-disposition']
+                    .should.be.equal('attachment; filename=\"test.js\"');
+                  done();
+                });
             });
           });
       });
