@@ -11,7 +11,7 @@
   "dependencies": {
     "bluebird": "^2.3.11",
     "body-parser": "^1.10.0",
-    "chokidar": "^0.8.2",
+    "chokidar": "^1.0.1",
     "lodash": "^2.4.1",
     "multer": "^0.1.0",
     "sanji": "^0.0.5",
