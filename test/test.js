@@ -518,4 +518,94 @@ describe('SanjiExpress', function() {
       });
     });
   });
+
+  describe('SanjiExpressDownloadHelper', function() {
+    describe('Translate [GET] to download file process' ,function() {
+      it('should respond download link', function(done) {
+        se.bundle.publish.post = function(resource, data) {
+          return new Promise(function(resolve) {
+            resolve({
+              code: 200,
+              data: {
+                url: 'http://localhost/fakedownload'
+              }
+            });
+          });
+        };
+
+        request(app)
+          .get('/system/export?download=1')
+          .expect(302)
+          .end(done);
+      })
+    });
+
+    describe('Translate [GET] to download file process (failed)' ,function() {
+      it('should respond download link', function(done) {
+        se.bundle.publish.post = function(resource, data) {
+          return new Promise(function(resolve) {
+            resolve({
+              code: 400,
+              data: {
+                message: 'Unknown error'
+              }
+            });
+          });
+        };
+
+        request(app)
+          .get('/system/export?download=1')
+          .expect(400)
+          .end(done);
+      })
+    });
+
+    describe('Translate [GET] to download file process (remote)' ,function() {
+      it('should respond download link', function(done) {
+        se.bundle.publish.post = function(resource, data) {
+          return new Promise(function(resolve) {
+            resolve({
+              code: 200,
+              data: {
+                code: 200,
+                method: 'post',
+                data: {
+                  url: 'http://localhost/fakedownload'
+                }
+              }
+            });
+          });
+        };
+
+        request(app)
+          .get('/cg-1234/system/export?download=1')
+          .expect(302)
+          .end(done);
+      })
+    });
+
+    describe('Translate [GET] to download file process (remote request failed)' ,function() {
+      it('should respond download link', function(done) {
+        se.bundle.publish.post = function(resource, data) {
+          return new Promise(function(resolve) {
+            resolve({
+              code: 200,
+              data: {
+                code: 400,
+                method: 'post',
+                data: {
+                  message: 'Unknown error'
+                }
+              }
+            });
+          });
+        };
+
+        request(app)
+          .get('/cg-1234/system/export?download=1')
+          .expect(400)
+          .end(done);
+      })
+    });
+  });
 });
