@@ -18,7 +18,7 @@
     "object-assign": "^2.0.0",
     "sanji": "0.0.9",
     "sanji-logger": "^0.0.1",
-    "sanji-puppetmaster": "^0.0.8",
+    "sanji-puppetmaster": "^0.0.9",
     "socket.io": "^1.2.1"
   },
   "devDependencies": {
