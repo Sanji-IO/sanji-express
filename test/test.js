@@ -170,6 +170,9 @@ describe('SanjiExpress', function() {
     describe('Translate [GET] to download file process', function() {
       it('should respond download link', function(done) {
         se.bundle.publish.post = function(resource, data) {
+          resource.should.be.equal('/system/export');
+          data.should.have.property('url');
+          data.should.have.property('headers');
           return new Promise(function(resolve) {
             resolve({
               code: 200,
@@ -181,7 +184,7 @@ describe('SanjiExpress', function() {
         };
 
         request(app)
-          .get('/system/export?download=1')
+          .get('/helper/download?resource=/system/export')
           .expect(302)
           .end(done);
       })
@@ -190,6 +193,9 @@ describe('SanjiExpress', function() {
     describe('Translate [GET] to download file process (failed)', function() {
       it('should respond download link', function(done) {
         se.bundle.publish.post = function(resource, data) {
+          resource.should.be.equal('/system/export');
+          data.should.have.property('url');
+          data.should.have.property('headers');
           return new Promise(function(resolve) {
             resolve({
               code: 400,
@@ -201,7 +207,7 @@ describe('SanjiExpress', function() {
         };
 
         request(app)
-          .get('/system/export?download=1')
+          .get('/helper/download?resource=/system/export')
           .expect(400)
           .end(done);
       })
@@ -210,6 +216,9 @@ describe('SanjiExpress', function() {
     describe('Translate [GET] to download file process (remote)', function() {
       it('should respond download link', function(done) {
         se.bundle.publish.post = function(resource, data) {
+          resource.should.be.equal('/remote/cg-1234');
+          data.data.should.have.property('url');
+          data.data.should.have.property('headers');
           return new Promise(function(resolve) {
             resolve({
               code: 200,
@@ -225,7 +234,7 @@ describe('SanjiExpress', function() {
         };
 
         request(app)
-          .get('/cg-1234/system/export?download=1')
+          .get('/cg-1234/helper/download?resource=/system/export&scope=123')
           .expect(302)
           .end(done);
       })
@@ -249,7 +258,7 @@ describe('SanjiExpress', function() {
         };
 
         request(app)
-          .get('/cg-1234/system/export?download=1')
+          .get('/cg-1234/helper/download?resource=/system/export')
           .expect(400)
           .end(done);
       })
