@@ -264,4 +264,87 @@ describe('SanjiExpress', function() {
       })
     });
   });
+
+  describe('SanjiExpressUploadHelper', function () {
+    var appUpload;
+
+    beforeEach(function (done) {
+      var appUpload = express();
+      appUpload.use('/api/v1/files/upload', function (req, res, next) {
+        res.json({
+          "fieldname": "file",
+          "physicalPath": "/var/www/webapp/node_modules/express-filebin/uploads/a7e2dd3244e45fe95b36c53fe5b9bbc4",
+          "url": "http://localhost/api/v1/files/download/a7e2dd3244e45fe95b36c53fe5b9bbc4"
+        });
+      });
+
+      var server = appUpload.listen(function () {
+        process.env.SITE_URL = 'http://localhost' + ':'+ server.address().port
+        done();
+      });
+    });
+
+    describe('Translate [POST] to upload file process', function () {
+      it('should respond bundle response', function (done) {
+        se.bundle.publish.post = function(resource, data) {
+          resource.should.be.equal('/system/import');
+          data.should.have.property('file');
+          data.file.should.have.property('url');
+          data.file.should.have.property('headers');
+          return new Promise(function (resolve) {
+            resolve({
+              code: 200,
+              data: {
+                message: 'OK'
+              }
+            });
+          });
+        };
+
+        request(app)
+          .post('/helper/upload?resource=/system/import')
+          .field('jsonData', JSON.stringify({
+            scopes: ['network', 'system']
+          }))
+          .attach('upload', __dirname + '/sample_config/bundle.json')
+          .expect(200)
+          .end(function(err, res) {
+            done();
+          });
+      })
+    });
+
+    describe('Translate [PUT] to upload file process (remote)', function () {
+      it('should respond bundle response', function (done) {
+        se.bundle.publish.post = function (resource, data) {
+          resource.should.be.equal('/remote/cg-1234');
+          data.data.should.have.property('file');
+          data.data.file.should.have.property('url');
+          data.data.file.should.have.property('headers');
+
+          return new Promise(function (resolve) {
+            resolve({
+              code: 200,
+              data: {
+                code: 200,
+                method: 'put',
+                data: {
+                  message: 'Got the file'
+                }
+              }
+            });
+          });
+        };
+
+        request(app)
+          .put('/cg-1234/helper/upload?resource=/system/import')
+          .field('jsonData', JSON.stringify({
+            scopes: ['network', 'system']
+          }))
+          .attach('upload', __dirname + '/sample_config/bundle.json')
+          .expect(200)
+          .end(done);
+      });
+    });
+  });
 });
