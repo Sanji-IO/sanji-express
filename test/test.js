@@ -346,5 +346,37 @@ describe('SanjiExpress', function() {
           .end(done);
       });
     });
+
+
+    describe('Translate [PUT] to upload file process (remote) without jsonData field', function () {
+      it('should respond bundle response', function (done) {
+        se.bundle.publish.post = function (resource, data) {
+          resource.should.be.equal('/remote/cg-1234');
+          data.data.should.have.property('file');
+          data.data.file.should.have.property('url');
+          data.data.file.should.have.property('headers');
+
+          return new Promise(function (resolve) {
+            resolve({
+              code: 200,
+              data: {
+                code: 200,
+                method: 'put',
+                data: {
+                  message: 'Got the file'
+                }
+              }
+            });
+          });
+        };
+
+        request(app)
+          .put('/cg-1234/helper/upload?resource=/system/import')
+          .set('X-Mx-AccessToken', 'xxxxxxxxxxxxxxxxxxxxxx')
+          .attach('upload', __dirname + '/sample_config/bundle.json')
+          .expect(200)
+          .end(done);
+      });
+    });
   });
 });
