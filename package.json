@@ -9,7 +9,7 @@
   "author": "YuLun Shih",
   "license": "MOXA",
   "dependencies": {
-    "bluebird": "^3.3.3",
+    "bluebird": "^2",
     "body-parser": "^1.15.0",
     "busboy": "^0.2.12",
     "chokidar": "^1.4.3",
