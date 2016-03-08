@@ -316,7 +316,7 @@ describe('SanjiExpress', function() {
 
     describe('Translate [PUT] to upload file process (remote)', function () {
       it('should respond bundle response', function (done) {
-        se.bundle.publish.post = function (resource, data) {
+        se.bundle.publish.put = function (resource, data) {
           resource.should.be.equal('/remote/cg-1234');
           data.data.should.have.property('file');
           data.data.file.should.have.property('url');
@@ -350,7 +350,7 @@ describe('SanjiExpress', function() {
 
     describe('Translate [PUT] to upload file process (remote) without jsonData field', function () {
       it('should respond bundle response', function (done) {
-        se.bundle.publish.post = function (resource, data) {
+        se.bundle.publish.put = function (resource, data) {
           resource.should.be.equal('/remote/cg-1234');
           data.data.should.have.property('file');
           data.data.file.should.have.property('url');
