@@ -1,6 +1,6 @@
 {
   "name": "sanji-express",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Express middleware of Sanji Framework.",
   "main": "index.js",
   "scripts": {
