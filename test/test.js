@@ -185,8 +185,12 @@ describe('SanjiExpress', function() {
 
         request(app)
           .get('/helper/download?resource=/system/export')
-          .expect(302)
-          .end(done);
+          .expect(200)
+          .end(function(err, res) {
+            if (err) return done(err);
+            res.body.should.have.property('downloadLink');
+            done();
+          });
       })
     });
 
@@ -235,8 +239,12 @@ describe('SanjiExpress', function() {
 
         request(app)
           .get('/cg-1234/helper/download?resource=/system/export&scope=123')
-          .expect(302)
-          .end(done);
+          .expect(200)
+          .end(function(err, res) {
+            if (err) return done(err);
+            res.body.should.have.property('downloadLink');
+            done();
+          });
       })
     });
 
