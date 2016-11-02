@@ -1,5 +1,5 @@
 var bunyan = require('bunyan'),
-    log = bunyan.log = bunyan.createLogger({name: 'Sanji-REST'}),
+    log = bunyan.log = bunyan.createLogger({ name: 'Sanji-REST' }),
     app = require('express')(),
     SanjiExpress = require('../../index');
 

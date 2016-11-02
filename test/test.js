@@ -13,7 +13,7 @@ function makeMockPromise(resource, data, dest, delayTime) {
     delayTime = 0;
   }
 
-  return new Promise(function(resolve) {
+  return new Promise(function (resolve) {
     return resolve({
       code: 200,
       data: {
@@ -27,7 +27,7 @@ function makeMockPromise(resource, data, dest, delayTime) {
 }
 
 function makeMockPromiseWithDelay(delayTime) {
-  return function(resource, data, dest) {
+  return function (resource, data, dest) {
     return makeMockPromise(resource, data, dest, delayTime);
   };
 }
@@ -47,7 +47,7 @@ function client(srv, nsp, opts) {
   return ioc(url, opts);
 }
 
-describe('SanjiExpress', function() {
+describe('SanjiExpress', function () {
 
   var app;
   var se;
@@ -55,7 +55,7 @@ describe('SanjiExpress', function() {
   var server;
   var BUNDLES_HOME = __dirname;
 
-  beforeEach(function() {
+  beforeEach(function () {
     app = express();
     app.use(require('body-parser').json());
 
@@ -72,23 +72,23 @@ describe('SanjiExpress', function() {
 
     // se = se.sanji;
 
-    ['get', 'post', 'put', 'delete'].forEach(function(method) {
+    ['get', 'post', 'put', 'delete'].forEach(function (method) {
       se.bundle.publish[method] = makeMockPromise;
       se.bundle.publish.direct[method] = makeMockPromise;
       se.bundle.publish.event[method] = makeMockPromise;
     });
   });
 
-  describe('CRUD translate to MQTT', function() {
+  describe('CRUD translate to MQTT', function () {
 
-    it('should get code 404 if resource not exist', function(done) {
+    it('should get code 404 if resource not exist', function (done) {
       request(app)
         .get('/somewhere/you/never/find')
-        // .expect(404)
+        .expect(404)
         .end(done);
     });
 
-    it('should translate [GET] method message', function(done) {
+    it('should translate [GET] method message', function (done) {
       request(app)
         .get('/system/time')
         .expect(200)
@@ -96,7 +96,7 @@ describe('SanjiExpress', function() {
         .end(done);
     });
 
-    it('should get code 408 if controller no response (timeout)', function(done) {
+    it('should get code 408 if controller no response (timeout)', function (done) {
       var clock = sinon.useFakeTimers();
       se.bundle.publish.delete = makeMockPromiseWithDelay(9999999);
       request(app)
@@ -108,24 +108,24 @@ describe('SanjiExpress', function() {
       clock.restore();
     });
 
-    it('should translate [PUT] method message with data', function(done) {
+    it('should translate [PUT] method message with data', function (done) {
       request(app)
         .put('/system/time')
-        .send({test: 'okok'})
+        .send({ test: 'okok' })
         .expect(200)
         .expect('Content-Type', /json/)
-        .end(function(err, res) {
+        .end(function (err, res) {
           res.body.resource.should.be.equal('/system/time');
-          res.body.data.should.be.eql({test: 'okok'});
+          res.body.data.should.be.eql({ test: 'okok' });
           done(err);
         });
     });
   });
 
-  describe('CRUD translate to "remote" MQTT', function() {
+  describe('CRUD translate to "remote" MQTT', function () {
     var cgId = 'cg-1234';
 
-    it('should translate [GET] method message to /remote/' + cgId, function(done) {
+    it('should translate [GET] method message to /remote/' + cgId, function (done) {
       request(app)
         .get('/' + cgId + '/system/time')
         .expect(200)
@@ -133,12 +133,12 @@ describe('SanjiExpress', function() {
         .end(done);
     });
 
-    it('should translate [GET] method message to /remote/ with query string' + cgId, function(done) {
+    it('should translate [GET] method message to /remote/ with query string' + cgId, function (done) {  // jscs: ignore
       request(app)
         .get('/' + cgId + '/system/time?page=10')
         .expect(200)
         .expect('Content-Type', /json/)
-        .end(function(err, res) {
+        .end(function (err, res) {
           if (err) {
             throw err;
           }
@@ -148,16 +148,16 @@ describe('SanjiExpress', function() {
         });
     });
 
-    it('should translate [PUT] method message with data to /remote/' + cgId, function(done) {
+    it('should translate [PUT] method message with data to /remote/' + cgId, function (done) {
       request(app)
         .put('/' + cgId + '/system/time')
-        .send({test: 'okok'})
+        .send({ test: 'okok' })
         .expect(200)
         .expect('Content-Type', /json/)
-        .end(function(err, res) {
+        .end(function (err, res) {
           res.body.resource.should.be.equal('/remote/' + cgId);
           res.body.data.should.be.eql({
-            data: {test: 'okok'},
+            data: { test: 'okok' },
             resource: '/system/time',
             method: 'put'
           });
@@ -166,14 +166,14 @@ describe('SanjiExpress', function() {
     });
   });
 
-  describe('SanjiExpressDownloadHelper', function() {
-    describe('Translate [GET] to download file process', function() {
-      it('should respond download link', function(done) {
-        se.bundle.publish.post = function(resource, data) {
+  describe('SanjiExpressDownloadHelper', function () {
+    describe('Translate [GET] to download file process', function () {
+      it('should respond download link', function (done) {
+        se.bundle.publish.post = function (resource, data) {
           resource.should.be.equal('/system/export');
           data.should.have.property('url');
           data.should.have.property('headers');
-          return new Promise(function(resolve) {
+          return new Promise(function (resolve) {
             resolve({
               code: 200,
               data: {
@@ -186,21 +186,21 @@ describe('SanjiExpress', function() {
         request(app)
           .get('/helper/download?resource=/system/export')
           .expect(200)
-          .end(function(err, res) {
+          .end(function (err, res) {
             if (err) return done(err);
             res.body.should.have.property('downloadLink');
             done();
           });
-      })
+      });
     });
 
-    describe('Translate [GET] to download file process (failed)', function() {
-      it('should respond download link', function(done) {
-        se.bundle.publish.post = function(resource, data) {
+    describe('Translate [GET] to download file process (failed)', function () {
+      it('should respond download link', function (done) {
+        se.bundle.publish.post = function (resource, data) {
           resource.should.be.equal('/system/export');
           data.should.have.property('url');
           data.should.have.property('headers');
-          return new Promise(function(resolve) {
+          return new Promise(function (resolve) {
             resolve({
               code: 400,
               data: {
@@ -214,16 +214,16 @@ describe('SanjiExpress', function() {
           .get('/helper/download?resource=/system/export')
           .expect(400)
           .end(done);
-      })
+      });
     });
 
-    describe('Translate [GET] to download file process (remote)', function() {
-      it('should respond download link', function(done) {
-        se.bundle.publish.post = function(resource, data) {
+    describe('Translate [GET] to download file process (remote)', function () {
+      it('should respond download link', function (done) {
+        se.bundle.publish.post = function (resource, data) {
           resource.should.be.equal('/remote/cg-1234');
           data.data.should.have.property('url');
           data.data.should.have.property('headers');
-          return new Promise(function(resolve) {
+          return new Promise(function (resolve) {
             resolve({
               code: 200,
               data: {
@@ -240,18 +240,18 @@ describe('SanjiExpress', function() {
         request(app)
           .get('/cg-1234/helper/download?resource=/system/export&scope=123')
           .expect(200)
-          .end(function(err, res) {
+          .end(function (err, res) {
             if (err) return done(err);
             res.body.should.have.property('downloadLink');
             done();
           });
-      })
+      });
     });
 
-    describe('Translate [GET] to download file process (remote request failed)', function() {
-      it('should respond download link', function(done) {
-        se.bundle.publish.post = function(resource, data) {
-          return new Promise(function(resolve) {
+    describe('Translate [GET] to download file process (remote request failed)', function () {
+      it('should respond download link', function (done) {
+        se.bundle.publish.post = function (resource, data) {
+          return new Promise(function (resolve) {
             resolve({
               code: 200,
               data: {
@@ -269,7 +269,7 @@ describe('SanjiExpress', function() {
           .get('/cg-1234/helper/download?resource=/system/export')
           .expect(400)
           .end(done);
-      })
+      });
     });
   });
 
@@ -280,21 +280,21 @@ describe('SanjiExpress', function() {
       var appUpload = express();
       appUpload.use('/api/v1/files/upload', function (req, res, next) {
         res.json({
-          "fieldname": "file",
-          "physicalPath": "/var/www/webapp/node_modules/express-filebin/uploads/a7e2dd3244e45fe95b36c53fe5b9bbc4",
-          "url": "http://localhost/api/v1/files/download/a7e2dd3244e45fe95b36c53fe5b9bbc4"
+          fieldname: 'file',
+          physicalPath: '/var/www/webapp/node_modules/express-filebin/uploads/a7e2dd3244e45fe95b36c53fe5b9bbc4',  // jscs: ignore
+          url: 'http://localhost/api/v1/files/download/a7e2dd3244e45fe95b36c53fe5b9bbc4'
         });
       });
 
       var server = appUpload.listen(function () {
-        process.env.SITE_URL = 'http://localhost' + ':'+ server.address().port
+        process.env.SITE_URL = 'http://localhost' + ':' + server.address().port;
         done();
       });
     });
 
     describe('Translate [POST] to upload file process', function () {
       it('should respond bundle response', function (done) {
-        se.bundle.publish.post = function(resource, data) {
+        se.bundle.publish.post = function (resource, data) {
           resource.should.be.equal('/system/import');
           data.should.have.property('file');
           data.file.should.have.property('url');
@@ -316,10 +316,10 @@ describe('SanjiExpress', function() {
           }))
           .attach('upload', __dirname + '/sample_config/bundle.json')
           .expect(200)
-          .end(function(err, res) {
+          .end(function (err, res) {
             done();
           });
-      })
+      });
     });
 
     describe('Translate [PUT] to upload file process (remote)', function () {
@@ -354,7 +354,6 @@ describe('SanjiExpress', function() {
           .end(done);
       });
     });
-
 
     describe('Translate [PUT] to upload file process (remote) without jsonData field', function () {
       it('should respond bundle response', function (done) {
