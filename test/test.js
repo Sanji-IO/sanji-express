@@ -292,7 +292,7 @@ describe('SanjiExpress', function () {
       });
     });
 
-    describe('Translate [POST] to upload file process', function () {
+    describe('Translate [POST] to upload file process (single file)', function () {
       it('should respond bundle response', function (done) {
         se.bundle.publish.post = function (resource, data) {
           resource.should.be.equal('/system/import');
@@ -316,10 +316,8 @@ describe('SanjiExpress', function () {
           }))
           .attach('upload', __dirname + '/sample_config/bundle.json')
           .expect(200)
-          .end(function (err, res) {
-            done();
-          });
-      });
+          .end(done);
+      })
     });
 
     describe('Translate [PUT] to upload file process (remote)', function () {
