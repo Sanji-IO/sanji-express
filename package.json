@@ -17,7 +17,7 @@
     "express": "^4.13.4",
     "object-assign": "^4.0.1",
     "request": "^2.69.0",
-    "sanji": "~0.0.19",
+    "sanji": "git+https://github.com/Sanji-IO/sanji-node.git#addevent",
     "socket.io": "^1.4.5"
   },
   "devDependencies": {
