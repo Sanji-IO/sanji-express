@@ -1,3 +1,5 @@
 *.*.swp
 node_modules/
 test/uploads/
+package-lock.json
+
